@@ -1,3 +1,4 @@
+from utils import validar_texto_vazio
 class Produto:
     def __init__(self, nome, preco, quantidade):
         self.nome = nome
@@ -16,9 +17,8 @@ class Produto:
     
     @nome.setter
     def nome(self, texto):
-        if not texto.strip():
-            raise ValueError("Nome não pode ser vazio")
-        self._nome = texto.strip().title()
+        if validar_texto_vazio(texto):
+            self._nome = texto.strip().title()
 
     @property
     def preco(self):
