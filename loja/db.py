@@ -11,6 +11,8 @@ class Database:
     def obter_conexao():
         return sqlite3.connect(CAMINHO_DB)
 
+def obter_conexao():
+    return Database.obter_conexao()
 
 def criar_tabela_produtos():
     with Database.obter_conexao() as conexao:

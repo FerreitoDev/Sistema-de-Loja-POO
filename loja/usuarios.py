@@ -37,11 +37,13 @@ class Usuario:
         self._senha = senha_hash
 
 class Cliente(Usuario):
-    def __init__(self, nome, email, senha):
+    def __init__(self, nome, email, senha, id = None):
         super().__init__(nome, email, senha)
+        self.id = id
         
 
 class Adm(Usuario):
-    def __init__(self, nome, email, senha):
+    def __init__(self, nome, email, senha, id = None):
         super().__init__(nome, email, senha)
+        self.id = id
 

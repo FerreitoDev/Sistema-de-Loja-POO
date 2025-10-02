@@ -1,11 +1,8 @@
-from loja.db import Database
+from loja.db import obter_conexao
 from loja.produtos import Produto
 
-def _conn():
-    return Database.obter_conexao()
-
 def adicionar_produto(produto: Produto):
-    with  _conn() as conexao:
+    with  obter_conexao() as conexao:
         cursor = conexao.cursor()
 
         cursor.execute(
@@ -17,7 +14,7 @@ def adicionar_produto(produto: Produto):
         produto.id = cursor.lastrowid
 
 def listar_produtos():
-    with  _conn() as conexao:
+    with  obter_conexao() as conexao:
         cursor = conexao.cursor()
 
         cursor.execute("SELECT id, nome, preco, quantidade FROM produtos")
@@ -31,7 +28,7 @@ def listar_produtos():
         return produtos
 
 def atualizar_produto(id, nome, preco, quantidade):
-    with _conn() as conexao:
+    with obter_conexao() as conexao:
         cursor = conexao.cursor()
 
         cursor.execute(
@@ -41,7 +38,7 @@ def atualizar_produto(id, nome, preco, quantidade):
         conexao.commit()
 
 def deletar_produto(id):
-    with _conn() as conexao:
+    with obter_conexao() as conexao:
         cursor = conexao.cursor()
 
         cursor.execute("DELETE FROM produtos WHERE id = ?", (id,))
