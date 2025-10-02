@@ -22,8 +22,12 @@ def validar_nome(nome):
     return True
 
 def validar_senha(senha):
-    tem_numero = any(char.isdigit() for char in senha)
-    tem_letra = any(char.isalpha() for char in senha)
+    tem_numero = tem_letra = False
+    for char in senha:
+        if char.isdigit():
+            tem_numero = True
+        elif char.isalpha():
+            tem_letra = True
 
     if len(senha) < MIN_CARACTERES_SENHA:
         raise ValueError ("Senha deve ter no mínimo 8 caracteres")
@@ -31,4 +35,5 @@ def validar_senha(senha):
         raise ValueError ("Senha deve conter letras e números")
     print("validado")
     
+
 

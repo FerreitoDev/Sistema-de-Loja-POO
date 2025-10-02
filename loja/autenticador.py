@@ -12,7 +12,7 @@ def verificar_senha(senha_pura_digitada, senha_hash_do_bd):
     return checkpw(senha_digitada_bytes, senha_hash_do_bd)
 
 
-senha = "1233453452424"
-nova_senha = hashear_senha(senha)
-if verificar_senha(senha, nova_senha):
-    print("Certinho")
+# senha = "1233453452424"
+# nova_senha = hashear_senha(senha)
+# if verificar_senha(senha, nova_senha):
+#     print("Certinho")

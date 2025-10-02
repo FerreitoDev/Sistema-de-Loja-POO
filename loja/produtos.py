@@ -1,6 +1,7 @@
-from utils import validar_texto_vazio
+from .utils import validar_texto_vazio
 class Produto:
-    def __init__(self, nome, preco, quantidade):
+    def __init__(self, nome, preco, quantidade, id = None):
+        self.id = id
         self.nome = nome
         self.preco = preco
         self.quantidade = quantidade
@@ -39,6 +40,6 @@ class Produto:
             self._quantidade = qtd
 
     def __str__(self):
-        return f"nome: {self._nome}, preço: {self._preco}, quantidade: {self._quantidade}" 
+        return f"ID: {self.id}, nome: {self._nome}, preço: {self._preco:.2f}, quantidade: {self._quantidade}" 
 
 

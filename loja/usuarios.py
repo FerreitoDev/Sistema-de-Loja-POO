@@ -1,5 +1,5 @@
 from utils import validar_texto_vazio
-class Cliente:
+class Usuario:
 
     def __init__(self, nome, email, senha):
         self.nome = nome
@@ -36,6 +36,12 @@ class Cliente:
             raise ValueError ("Senha não pode ser vazia")
         self._senha = senha_hash
 
+class Cliente(Usuario):
+    def __init__(self, nome, email, senha):
+        super().__init__(nome, email, senha)
+        
 
-
+class Adm(Usuario):
+    def __init__(self, nome, email, senha):
+        super().__init__(nome, email, senha)
 
