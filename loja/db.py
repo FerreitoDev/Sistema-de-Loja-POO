@@ -27,3 +27,17 @@ def criar_tabela_produtos():
 
         conexao.commit()
 
+def criar_tabela_ADM():
+    with Database.obter_conexao() as conexao:
+        cursor = conexao.cursor()
+
+        cursor.execute(""""
+        CREATE TABLE IF NOT EXISTS adm (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            nome TEXT NOT NULL,
+            email TEXT NOT NULL UNIQUE,
+            senha TEXT NOT NULL      
+        )
+        """)
+
+        conexao.commit()
