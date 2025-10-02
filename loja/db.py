@@ -27,7 +27,7 @@ def criar_tabela_produtos():
 
         conexao.commit()
 
-def criar_tabela_ADM():
+def criar_tabela_adm():
     with Database.obter_conexao() as conexao:
         cursor = conexao.cursor()
 
