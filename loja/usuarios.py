@@ -1,4 +1,4 @@
-from utils import validar_texto_vazio
+from loja.utils import validar_texto_vazio
 class Usuario:
 
     def __init__(self, nome, email, senha):

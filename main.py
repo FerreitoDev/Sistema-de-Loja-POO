@@ -1,5 +1,6 @@
-from loja import db, produtos
-from loja.repositorios import produtos_dao
+from loja import db
+from loja.repositorios import produtos_dao, usuarios_dao
+from loja.autenticador import Autenticador
 
 
 # if __name__ == "__main__":
@@ -19,3 +20,11 @@ from loja.repositorios import produtos_dao
 #     produtos_dao.deletar_produto(2)
 #     for c in produtos_dao.listar_produtos():
 #         print(c)
+
+# db.criar_tabela_adm()
+
+# try:
+#     adm = Autenticador.cadastro_adm("Administrador", "administrador@loja.com", "contateste123@")
+#     usuarios_dao.adicionar_adm(adm)
+# except ValueError as e:
+#     print(e)

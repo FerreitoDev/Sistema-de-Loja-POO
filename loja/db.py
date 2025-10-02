@@ -33,7 +33,7 @@ def criar_tabela_adm():
     with Database.obter_conexao() as conexao:
         cursor = conexao.cursor()
 
-        cursor.execute(""""
+        cursor.execute("""
         CREATE TABLE IF NOT EXISTS adm (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             nome TEXT NOT NULL,

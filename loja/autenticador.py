@@ -1,7 +1,7 @@
 import re
-from usuarios import Adm, Cliente
+from loja.usuarios import Adm, Cliente
 from bcrypt import hashpw, gensalt, checkpw
-from utils import validar_texto_vazio
+from loja.utils import validar_texto_vazio
 
 PADRAO = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
 MIN_CARACTERES_SENHA = 8
@@ -32,7 +32,6 @@ class Autenticador:
         nome_verificacao = nome.replace(" ", "")
         if not nome_verificacao.isalpha():
             raise ValueError ("Nome não pode conter números ou símbolos")
-        print("Teste")
         return True
     
     @staticmethod
@@ -48,7 +47,6 @@ class Autenticador:
             raise ValueError ("Senha deve ter no mínimo 8 caracteres")
         elif not tem_numero or not tem_letra:
             raise ValueError ("Senha deve conter letras e números")
-        print("validado")
 
     @classmethod
     def cadastro_adm(cls, nome, email, senha):
@@ -56,4 +54,4 @@ class Autenticador:
         cls.validar_email(email)
         cls.validar_senha(senha)
         senha_hash = cls.hashear_senha(senha)
-        adm = Adm(nome, email, senha_hash)
+        return Adm(nome, email, senha_hash)
