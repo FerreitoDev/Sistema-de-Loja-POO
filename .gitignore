@@ -1,2 +1,3 @@
-loja/__pycache__
+__pycache__/
+*.pyc
 loja.db
