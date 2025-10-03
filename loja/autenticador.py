@@ -2,11 +2,17 @@ import re
 from loja.usuarios import Adm, Cliente
 from bcrypt import hashpw, gensalt, checkpw
 from loja.utils import validar_texto_vazio
+from loja.repositorios.usuarios_dao import UsuarioDAO
 
 PADRAO = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
 MIN_CARACTERES_SENHA = 8
 
 class Autenticador:
+
+    class ErroLogin(Exception):
+        pass
+
+
     @staticmethod
     def hashear_senha(senha_pura):
         salt = gensalt()
@@ -16,7 +22,7 @@ class Autenticador:
         return senha_hash
 
     @staticmethod
-    def verificar_senha(senha_pura_digitada, senha_hash_do_bd):
+    def verificar_senha_login(senha_pura_digitada, senha_hash_do_bd):
         senha_digitada_bytes = senha_pura_digitada.encode('utf-8')
         return checkpw(senha_digitada_bytes, senha_hash_do_bd)
 
@@ -55,3 +61,15 @@ class Autenticador:
         cls.validar_senha(senha)
         senha_hash = cls.hashear_senha(senha)
         return Adm(nome, email, senha_hash)
+    
+    @classmethod
+    def logar(cls, email, senha):
+        usuario = UsuarioDAO.procurar_usuarios(email)
+
+        if not usuario:
+            raise cls.ErroLogin("Erro: Usuario não encontrado.")
+        
+        if cls.verificar_senha_login(senha, usuario.senha):
+                return usuario
+        
+        raise cls.ErroLogin("Erro: Email ou senha incorretos.")

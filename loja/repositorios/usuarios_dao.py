@@ -3,7 +3,7 @@ from loja.usuarios import Cliente, Adm
 
 class UsuarioDAO:
 
-    TABELA_CLIENTE = "cliente"
+    TABELA_CLIENTE = "clientes"
     TABELA_ADM = "adm"
 
     class EmailJaCadastrado(Exception):
@@ -34,3 +34,24 @@ class UsuarioDAO:
     @classmethod
     def adicionar_cliente(cls, cliente : Cliente):
         cls._adicionar_usuario(cliente, cls.TABELA_CLIENTE)
+
+    @staticmethod
+    def procurar_usuarios(email):
+        with obter_conexao() as conexao:
+            cursor = conexao.cursor()
+
+            cursor.execute("""
+                SELECT 'adm' as tipo, nome, email, senha, id FROM adm WHERE email = ?
+                UNION ALL
+                SELECT 'cliente' as tipo, nome, email, senha, id FROM clientes WHERE email = ?
+                """, (email, email))
+            
+            usuario = cursor.fetchone()
+
+            if usuario:
+                tipo, *dados = usuario
+                if tipo == "adm":
+                    return Adm(*dados)
+                else:
+                    return Cliente(*dados)
+            return None
