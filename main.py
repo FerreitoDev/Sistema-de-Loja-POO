@@ -1,5 +1,5 @@
 from loja import db
-from loja.repositorios import produtos_dao, usuarios_dao
+from loja.repositorios.usuarios_dao import UsuarioDAO
 from loja.autenticador import Autenticador
 
 
@@ -25,6 +25,6 @@ from loja.autenticador import Autenticador
 
 # try:
 #     adm = Autenticador.cadastro_adm("Administrador", "administrador@loja.com", "contateste123@")
-#     usuarios_dao.adicionar_adm(adm)
+#     UsuarioDAO.adicionar_adm(adm)
 # except ValueError as e:
 #     print(e)

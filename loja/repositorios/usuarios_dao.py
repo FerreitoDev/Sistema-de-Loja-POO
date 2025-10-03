@@ -1,30 +1,36 @@
 from loja.db import obter_conexao
 from loja.usuarios import Cliente, Adm
 
-TABELA_CLIENTE = "cliente"
-TABELA_ADM = "adm"
+class UsuarioDAO:
 
-def _adicionar_usuario(usuario, tabela):
-    with obter_conexao() as conexao:
-        cursor = conexao.cursor()
+    TABELA_CLIENTE = "cliente"
+    TABELA_ADM = "adm"
 
-        cursor.execute(f"SELECT 1 FROM {tabela} WHERE email = ?", (usuario.email,))
-        if cursor.fetchone():
-            raise EmailJaCadastrado ("Erro: Email já cadastrado.")
+    class EmailJaCadastrado(Exception):
+        pass
 
-        cursor.execute(
-            f"INSERT INTO {tabela} (nome, email, senha) VALUES (?, ?, ?)",
-            (usuario.nome, usuario.email, usuario.senha)
-        )
 
-        conexao.commit()
-        usuario.id = cursor.lastrowid
+    @staticmethod
+    def _adicionar_usuario(usuario, tabela):
+        with obter_conexao() as conexao:
+            cursor = conexao.cursor()
 
-class EmailJaCadastrado(Exception):
-    pass
+            cursor.execute(f"SELECT 1 FROM {tabela} WHERE email = ?", (usuario.email,))
+            if cursor.fetchone():
+                raise UsuarioDAO.EmailJaCadastrado ("Erro: Email já cadastrado.")
 
-def adicionar_adm(adm : Adm):
-    _adicionar_usuario(adm, TABELA_ADM)
+            cursor.execute(
+                f"INSERT INTO {tabela} (nome, email, senha) VALUES (?, ?, ?)",
+                (usuario.nome, usuario.email, usuario.senha)
+            )
 
-def adicionar_cliente(cliente : Cliente):
-    _adicionar_usuario(cliente, TABELA_CLIENTE)
+            conexao.commit()
+            usuario.id = cursor.lastrowid
+
+    @classmethod
+    def adicionar_adm(cls, adm : Adm):
+        cls._adicionar_usuario(adm, cls.TABELA_ADM)
+
+    @classmethod
+    def adicionar_cliente(cls, cliente : Cliente):
+        cls._adicionar_usuario(cliente, cls.TABELA_CLIENTE)

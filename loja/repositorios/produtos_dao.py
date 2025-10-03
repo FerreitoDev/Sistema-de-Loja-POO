@@ -1,45 +1,51 @@
 from loja.db import obter_conexao
 from loja.produtos import Produto
 
-def adicionar_produto(produto: Produto):
-    with  obter_conexao() as conexao:
-        cursor = conexao.cursor()
+class ProdutosDAO:
 
-        cursor.execute(
-            "INSERT INTO produtos (nome, preco, quantidade) VALUES (?, ?, ?)",
-            (produto.nome, produto.preco, produto.quantidade)
-        )
+    @staticmethod
+    def adicionar_produto(produto: Produto):
+        with  obter_conexao() as conexao:
+            cursor = conexao.cursor()
 
-        conexao.commit()
-        produto.id = cursor.lastrowid
+            cursor.execute(
+                "INSERT INTO produtos (nome, preco, quantidade_estoque) VALUES (?, ?, ?)",
+                (produto.nome, produto.preco, produto.quantidade_estoque)
+            )
 
-def listar_produtos():
-    with  obter_conexao() as conexao:
-        cursor = conexao.cursor()
+            conexao.commit()
+            produto.id = cursor.lastrowid
 
-        cursor.execute("SELECT id, nome, preco, quantidade FROM produtos")
-        linhas = cursor.fetchall()
+    @staticmethod
+    def listar_produtos():
+        with  obter_conexao() as conexao:
+            cursor = conexao.cursor()
 
-        produtos = []
-        for linha in linhas:
-            produto = Produto(id = linha[0], nome = linha[1], preco = linha[2], quantidade = linha[3])
-            produtos.append(produto)
+            cursor.execute("SELECT id, nome, preco, quantidade_estoque FROM produtos")
+            linhas = cursor.fetchall()
 
-        return produtos
+            produtos = []
+            for linha in linhas:
+                produto = Produto(id = linha[0], nome = linha[1], preco = linha[2], quantidade_estoque = linha[3])
+                produtos.append(produto)
 
-def atualizar_produto(id, nome, preco, quantidade):
-    with obter_conexao() as conexao:
-        cursor = conexao.cursor()
+            return produtos
 
-        cursor.execute(
-            "UPDATE produtos SET nome = ?, preco = ?, quantidade = ? WHERE id = ?",
-            (nome, preco, quantidade, id)
-        )
-        conexao.commit()
+    @staticmethod
+    def atualizar_produto(id, nome, preco, quantidade_estoque):
+        with obter_conexao() as conexao:
+            cursor = conexao.cursor()
 
-def deletar_produto(id):
-    with obter_conexao() as conexao:
-        cursor = conexao.cursor()
+            cursor.execute(
+                "UPDATE produtos SET nome = ?, preco = ?, quantidade_estoque = ? WHERE id = ?",
+                (nome, preco, quantidade_estoque, id)
+            )
+            conexao.commit()
 
-        cursor.execute("DELETE FROM produtos WHERE id = ?", (id,))
-        conexao.commit()
+    @staticmethod
+    def deletar_produto(id):
+        with obter_conexao() as conexao:
+            cursor = conexao.cursor()
+
+            cursor.execute("DELETE FROM produtos WHERE id = ?", (id,))
+            conexao.commit()

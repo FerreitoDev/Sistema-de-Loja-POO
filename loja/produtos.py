@@ -1,10 +1,10 @@
 from .utils import validar_texto_vazio
 class Produto:
-    def __init__(self, nome, preco, quantidade, id = None):
+    def __init__(self, nome, preco, quantidade_estoque, id = None):
         self.id = id
         self.nome = nome
         self.preco = preco
-        self.quantidade = quantidade
+        self.quantidade_estoque = quantidade_estoque
 
     @staticmethod
     def validar_valor(valor):
@@ -31,15 +31,15 @@ class Produto:
             self._preco = valor
 
     @property
-    def quantidade(self):
-        return self._quantidade
+    def quantidade_estoque(self):
+        return self._quantidade_estoque
     
-    @quantidade.setter
-    def quantidade(self, qtd):
+    @quantidade_estoque.setter
+    def quantidade_estoque(self, qtd):
         if Produto.validar_valor(qtd):
-            self._quantidade = qtd
+            self._quantidade_estoque = qtd
 
     def __str__(self):
-        return f"ID: {self.id}, nome: {self._nome}, preço: {self._preco:.2f}, quantidade: {self._quantidade}" 
+        return f"ID: {self.id}, nome: {self._nome}, preço: {self._preco:.2f}, quantidade_estoque: {self._quantidade}" 
 
 

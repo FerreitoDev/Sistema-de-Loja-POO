@@ -23,7 +23,7 @@ def criar_tabela_produtos():
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             nome TEXT NOT NULL,
             preco REAL NOT NULL,
-            quantidade INTEGER NOT NULL               
+            quantidade_estoque INTEGER NOT NULL               
         )
         """)
 
