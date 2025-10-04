@@ -1,4 +1,5 @@
 from loja.utils import validar_texto_vazio
+from loja.repositorios.produtos_dao import ProdutosDAO
 class Usuario:
 
     def __init__(self, nome, email, senha):
@@ -46,4 +47,16 @@ class Adm(Usuario):
     def __init__(self, nome, email, senha, id = None):
         super().__init__(nome, email, senha)
         self.id = id
+
+    @staticmethod
+    def cadastrar_produto(produto):
+        ProdutosDAO.adicionar_produto(produto)
+
+    @staticmethod
+    def alterar_produto(id, nome, preco, quantidade_estoque):
+        ProdutosDAO.atualizar_produto(id, nome, preco, quantidade_estoque)
+
+    @staticmethod
+    def excluir_produto(id):
+        ProdutosDAO.deletar_produto(id)
 

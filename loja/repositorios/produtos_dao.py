@@ -1,11 +1,11 @@
-from loja.db import obter_conexao
+from loja.db import DataBase
 from loja.produtos import Produto
 
 class ProdutosDAO:
 
     @staticmethod
     def adicionar_produto(produto: Produto):
-        with  obter_conexao() as conexao:
+        with  DataBase.obter_conexao() as conexao:
             cursor = conexao.cursor()
 
             cursor.execute(
@@ -18,11 +18,14 @@ class ProdutosDAO:
 
     @staticmethod
     def listar_produtos():
-        with  obter_conexao() as conexao:
+        with  DataBase.obter_conexao() as conexao:
             cursor = conexao.cursor()
 
             cursor.execute("SELECT id, nome, preco, quantidade_estoque FROM produtos")
             linhas = cursor.fetchall()
+
+            if not linhas:
+                raise ValueError("Nenhum produto foi encontrado")
 
             produtos = []
             for linha in linhas:
@@ -32,20 +35,43 @@ class ProdutosDAO:
             return produtos
 
     @staticmethod
-    def atualizar_produto(id, nome, preco, quantidade_estoque):
-        with obter_conexao() as conexao:
+    def atualizar_produto(produto: Produto):
+        with DataBase.obter_conexao() as conexao:
             cursor = conexao.cursor()
 
             cursor.execute(
                 "UPDATE produtos SET nome = ?, preco = ?, quantidade_estoque = ? WHERE id = ?",
-                (nome, preco, quantidade_estoque, id)
+                (produto.nome, produto.preco, produto.quantidade_estoque, produto.id)
             )
+
+            if cursor.rowcount == 0:
+                raise ValueError("Produto não encontrado")
             conexao.commit()
 
     @staticmethod
     def deletar_produto(id):
-        with obter_conexao() as conexao:
+        with DataBase.obter_conexao() as conexao:
             cursor = conexao.cursor()
 
             cursor.execute("DELETE FROM produtos WHERE id = ?", (id,))
+            
+            if cursor.rowcount == 0:
+                raise ValueError("Produto não encontrado")
+
             conexao.commit()
+
+    def pegar_produto(id):
+        with DataBase.obter_conexao() as conexao:
+            cursor = conexao.cursor()
+
+            cursor.execute("SELECT nome, preco, quantidade_estoque, id FROM produtos WHERE id = ?",(id,))
+            produto_db = cursor.fetchone()
+            
+            if not produto_db:
+                raise ValueError("Produto não encontrado")
+            
+            produto = Produto(nome = produto_db[0], preco = produto_db[1], quantidade_estoque = produto_db[2], id = produto_db[3])
+
+            return produto
+            
+

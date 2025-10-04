@@ -1,5 +1,5 @@
 import re
-from loja.usuarios import Adm, Cliente
+from loja.usuarios import Adm
 from bcrypt import hashpw, gensalt, checkpw
 from loja.utils import validar_texto_vazio
 from loja.repositorios.usuarios_dao import UsuarioDAO

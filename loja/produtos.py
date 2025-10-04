@@ -1,4 +1,4 @@
-from .utils import validar_texto_vazio
+from .utils import validar_texto_vazio, validar_valor
 class Produto:
     def __init__(self, nome, preco, quantidade_estoque, id = None):
         self.id = id
@@ -6,11 +6,6 @@ class Produto:
         self.preco = preco
         self.quantidade_estoque = quantidade_estoque
 
-    @staticmethod
-    def validar_valor(valor):
-        if valor <= 0:
-            raise ValueError("Valor tem que ser maior que 0")
-        return True
     
     @property
     def nome(self):
@@ -27,7 +22,7 @@ class Produto:
 
     @preco.setter
     def preco(self, valor):
-        if Produto.validar_valor(valor):
+        if validar_valor(valor):
             self._preco = valor
 
     @property
@@ -36,10 +31,10 @@ class Produto:
     
     @quantidade_estoque.setter
     def quantidade_estoque(self, qtd):
-        if Produto.validar_valor(qtd):
+        if validar_valor(qtd):
             self._quantidade_estoque = qtd
 
     def __str__(self):
-        return f"ID: {self.id}, nome: {self._nome}, preço: {self._preco:.2f}, quantidade_estoque: {self._quantidade}" 
-
+        return f"ID: {self.id}, nome: {self._nome}, preço: {self._preco:.2f}, quantidade_estoque: {self._quantidade_estoque}" 
+    
 

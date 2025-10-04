@@ -1,4 +1,4 @@
-from loja.db import obter_conexao
+from loja.db import DataBase
 from loja.usuarios import Cliente, Adm
 
 class UsuarioDAO:
@@ -12,7 +12,7 @@ class UsuarioDAO:
 
     @staticmethod
     def _adicionar_usuario(usuario, tabela):
-        with obter_conexao() as conexao:
+        with DataBase.obter_conexao() as conexao:
             cursor = conexao.cursor()
 
             cursor.execute(f"SELECT 1 FROM {tabela} WHERE email = ?", (usuario.email,))
@@ -37,7 +37,7 @@ class UsuarioDAO:
 
     @staticmethod
     def procurar_usuarios(email):
-        with obter_conexao() as conexao:
+        with DataBase.obter_conexao() as conexao:
             cursor = conexao.cursor()
 
             cursor.execute("""
