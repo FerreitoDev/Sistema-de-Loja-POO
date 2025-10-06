@@ -23,4 +23,9 @@ def menu_atualizar_produto():
     print("4. Sair")
 
 def menu_cliente():
-    pass
+    print("\n === Loja ===")
+    print("1. Ver produtos")
+    print("2. Adicionar Produto ao carrinho.")
+    print("3. Ver Carrinho/Finalizar Pedido")
+    print("4. Ver Histórico de Compra")
+    print("5. Sair")

@@ -10,44 +10,58 @@ DataBase.criar_tabelas()
 def main():
     login = False
     while True:
-        if not login:
-            logar = cadastrar = False
-            menus.menu_login_cadastro()
-            opcao, sucesso = utils.obter_opcao()
+        while True:
+            if not login:
+                menus.menu_login_cadastro()
+                opcao, sucesso = utils.obter_opcao()
 
-            if not sucesso:
-                continue
+                if not sucesso:
+                    continue
 
-            match opcao:
-                case 1:
-                    logar = True
-                case 2:
-                    cadastrar = True
-                case 3:
-                    exit()
-                case _:
-                    print("\nErro: Opção inválida")
+                match opcao:
+                    case 1:
+                        while True:
+                            print("\n=== Login ===")
+                            print("Para voltar digite '0' no campo Email.")
+                            try:
+                                email = input("Email: ")
+                                print(email)
+                                if email.strip() == "0":
+                                    break
+                                Autenticador.validar_email(email)
+                                senha = input("Senha: ")
+                                print(senha)
+                                usuario_login = Autenticador.logar(email, senha)
+                                if usuario_login:
+                                    login = True
+                                    print("Usuario logado com sucesso.")
+                                    break
+                            except (Autenticador.ErroLogin, ValueError) as e:
+                                print("Erro:", e)
+                                continue
+                    case 2:
+                        while True:
+                            print("\n=== Cadastro ===")
+                            print("Para voltar digite '0'.")
+                            try:
+                                nome = input("Nome: ")
+                                email = input("Email: ")
+                                senha = input("Senha: ")
+                                if nome.strip() == '0' or email.strip() == '0' or senha.strip() == '0':
+                                    
+                                    break
+                                Autenticador.cadastrar_cliente(nome, email, senha)
+                                print("Cliente cadastrado com sucesso.")
+                                
+                                break
+                            except ValueError as e:
+                                print("Erro:", e)
+                    case 3:
+                        exit()
+                    case _:
+                        print("\nErro: Opção inválida")
+            break
 
-            if logar:
-                while True:
-                    print("\n=== Login ===")
-                    try:
-                        print("Para voltar digite '0' no campo Email.")
-                        email = input("Email: ")
-                        print(email)
-                        if email.strip() == "0":
-                            break
-                        Autenticador.validar_email(email)
-                        senha = input("Senha: ")
-                        print(senha)
-                        usuario_login = Autenticador.logar(email, senha)
-                        if usuario_login:
-                            login = True
-                            print("Usuario logado com sucesso.")
-                            break
-                    except (Autenticador.ErroLogin, ValueError) as e:
-                        print("Erro:", e)
-                        continue
         if login and isinstance(usuario_login, Adm):
             while True:
                 menus.menu_adm()
@@ -185,8 +199,26 @@ def main():
                     case 8:
                         login = False
                         break       
+        if login and isinstance(usuario_login, Cliente):
+            while True:
+                menus.menu_cliente()
+                opcao, sucesso = utils.obter_opcao()
 
+                if not sucesso:
+                    continue
 
+                match opcao:
+                    case 1:
+                        pass
+                    case 2:         
+                        pass
+                    case 3:
+                        pass
+                    case 4:
+                        pass
+                    case 5:
+                        login = False
+                        break
 
 
 if __name__ == "__main__":
