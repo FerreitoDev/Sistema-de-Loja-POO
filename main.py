@@ -96,13 +96,14 @@ def main():
                             print("\n=== Atualizar Produtos ===")
                             try:
                                 print("Para voltar digite '0'.")
-                                entrada = input("Informe o ID do produto: ")
+                                id_produto = input("Informe o ID do produto: ")
 
-                                if entrada == '0':
+                                if id_produto == '0':
                                     break
-
-                                id_produto = utils.obter_id(int(entrada))
-                                produto_atualizar = ProdutosDAO.pegar_produto(id_produto)
+                                
+                                id_produto = int(id_produto)
+                                if utils.validar_id(id_produto):
+                                    produto_atualizar = ProdutosDAO.pegar_produto(id_produto)
 
                             except ValueError as e:
                                 print("\nErro:", e)
@@ -162,13 +163,14 @@ def main():
                             print("\n=== Deletar Produto ===")
                             try:
                                 print("Para voltar digite '0'.")
-                                entrada = input("Informe o ID do produto: ")
+                                id_produto = input("Informe o ID do produto: ")
 
-                                if entrada == '0':
+                                if id_produto == '0':
                                     break
-
-                                id_produto = utils.obter_id(int(entrada))
-                                produto_deletar = ProdutosDAO.pegar_produto(id_produto)
+                                
+                                id_produto = int(id_produto)
+                                if utils.validar_id(id_produto):
+                                    produto_deletar = ProdutosDAO.pegar_produto(id_produto)
 
                             except ValueError as e:
                                 print("\nErro:", e)
@@ -209,7 +211,10 @@ def main():
 
                 match opcao:
                     case 1:
-                        pass
+                        print("\n=== Produtos ===")
+                        produtos = ProdutosDAO.listar_produtos()
+                        for produto in produtos:
+                            print(produto)
                     case 2:         
                         pass
                     case 3:

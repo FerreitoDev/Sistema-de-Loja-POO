@@ -19,10 +19,10 @@ def validar_valor(valor):
         raise ValueError("Valor tem que ser maior ou igual 0")
     return True
 
-def obter_id(id):
+def validar_id(id):
     if not isinstance(id, int):
         raise ValueError("Id deve ser um número inteiro")
     if id <= 0:
         raise ValueError("Id inválido")
-    return id
+    return True
 

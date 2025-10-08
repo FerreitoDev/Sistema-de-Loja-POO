@@ -42,4 +42,28 @@ class DataBase:
             )
             """)
 
+            cursor.execute("""
+            CREATE TABLE IF NOT EXISTS pedido (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                cliente_id INTEGER NOT NULL,
+                total REAL NOT NULL DEFAULT 0.0,
+                status TEXT NOT NULL DEFAULT 'aberto',
+                data TEXT NOT NULL,
+                FOREIGN KEY (cliente_id) REFERENCES clientes(id)
+            )
+            """)
+            
+            cursor.execute("""
+            CREATE TABLE IF NOT EXISTS pedido_item (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                pedido_id INTEGER NOT NULL,
+                produto_id INTEGER NOT NULL,
+                quantidade INTEGER NOT NULL,
+                preco_unitario REAL NOT NULL,
+                subtotal REAL NOT NULL,
+                FOREIGN KEY (pedido_id) REFERENCES pedido(id) ON DELETE CASCADE,
+                FOREIGN KEY (produto_id) REFERENCES produtos(id)
+            )
+            """)
+
             conexao.commit()

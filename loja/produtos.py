@@ -23,7 +23,7 @@ class Produto:
     @preco.setter
     def preco(self, valor):
         if validar_valor(valor):
-            self._preco = valor
+            self._preco = float(valor)
 
     @property
     def quantidade_estoque(self):
@@ -35,6 +35,6 @@ class Produto:
             self._quantidade_estoque = qtd
 
     def __str__(self):
-        return f"ID: {self.id}, nome: {self._nome}, preço: {self._preco:.2f}, quantidade_estoque: {self._quantidade_estoque}" 
+        return f"ID: {self.id}, Nome: {self._nome}, Preço: R${self._preco:.2f}, Quantidade: {self._quantidade_estoque}" 
     
 
