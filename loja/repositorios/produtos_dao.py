@@ -33,6 +33,24 @@ class ProdutosDAO:
                 produtos.append(produto)
 
             return produtos
+        
+    @staticmethod
+    def listar_produtos_cliente():
+        with  DataBase.obter_conexao() as conexao:
+            cursor = conexao.cursor()
+
+            cursor.execute("SELECT id, nome, preco, quantidade_estoque FROM produtos")
+            linhas = cursor.fetchall()
+
+            if not linhas:
+                raise ValueError("Nenhum produto foi encontrado")
+
+            produtos = []
+            for linha in linhas:
+                produto = Produto(id = linha[0], nome = linha[1], preco = linha[2], quantidade_estoque = linha[3])
+                produtos.append(produto)
+
+            return produtos
 
     @staticmethod
     def atualizar_produto(produto: Produto):
@@ -46,18 +64,6 @@ class ProdutosDAO:
 
             if cursor.rowcount == 0:
                 raise ValueError("Produto não encontrado")
-            conexao.commit()
-
-    @staticmethod
-    def deletar_produto(id):
-        with DataBase.obter_conexao() as conexao:
-            cursor = conexao.cursor()
-
-            cursor.execute("DELETE FROM produtos WHERE id = ?", (id,))
-            
-            if cursor.rowcount == 0:
-                raise ValueError("Produto não encontrado")
-
             conexao.commit()
 
     def pegar_produto(id):

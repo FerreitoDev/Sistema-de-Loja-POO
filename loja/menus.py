@@ -9,11 +9,10 @@ def menu_adm():
     print("1. Listar Produtos")
     print("2. Adicionar Produtos")
     print("3. Atualizar Produtos")
-    print("4. Excluir Produtos")
-    print("5. Ver Pedidos")
-    print("6. Gerar Relatório")
-    print("7. Criar Conta Administradora")
-    print("8. Sair")
+    print("4. Ver Pedidos")
+    print("5. Gerar Relatório")
+    print("6. Criar Conta Administradora")
+    print("7. Sair")
 
 def menu_atualizar_produto():
     print("Escolha uma opção:")

@@ -158,40 +158,7 @@ def main():
                                     break
 
                     case 4:
-                        
-                        while True:
-                            print("\n=== Deletar Produto ===")
-                            try:
-                                print("Para voltar digite '0'.")
-                                id_produto = input("Informe o ID do produto: ")
-
-                                if id_produto == '0':
-                                    break
-                                
-                                id_produto = int(id_produto)
-                                if utils.validar_id(id_produto):
-                                    produto_deletar = ProdutosDAO.pegar_produto(id_produto)
-
-                            except ValueError as e:
-                                print("\nErro:", e)
-                                continue
-                            print("\n" + 50 * "=")
-                            print(produto_deletar)
-                            print(50* "=")
-                            confirmacao = input("\nTem certeza que deseja deletar esse produto? (sim/não): ")
-                            
-                            if confirmacao.strip().upper() == "SIM":
-                                ProdutosDAO.deletar_produto(id_produto)
-                                print("\nProduto deletado com sucesso.")
-                                break
-
-                            elif confirmacao.strip().upper() == "NÃO" or confirmacao.strip().upper() == "NAO":
-                                print("\nVoltando a seleção do produto...")
-                                continue
-
-                            else:
-                                print("Opção inválida. Tente novamente.")
-                                continue
+                        pass
                     case 5:
                         pass
                     case 6:
