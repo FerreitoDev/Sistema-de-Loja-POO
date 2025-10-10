@@ -217,6 +217,21 @@ class Interface:
 
         except ValueError as e:
             print("Erro:", e)
+    
+    @staticmethod
+    def exibir_historico(usuario_id):
+        print("\n=== Histórico ===")
+        pedidos = PedidosDAO.buscar_cliente_pedidos_fechado(usuario_id)
+        if pedidos:
+            for pedido in pedidos:
+                print(f"Pedido ID: {pedido.id}\nData: {pedido.data}")
+                itens = PedidosDAO.visualizar_pedido(pedido.id)
+                print("Itens:")
+                for i, item in enumerate(itens, start = 1):
+                    print(f"    {i}. {item}")
+
+                print(f"\nTotal: R${pedido.total:.2f}")
+
 
     @staticmethod
     def pagando(carrinho):
@@ -254,6 +269,7 @@ class Interface:
                     break
                 case _:
                     raise ValueError("Opção inválida.")
+                
             
             
 

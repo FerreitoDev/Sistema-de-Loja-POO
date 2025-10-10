@@ -75,7 +75,7 @@ def main():
                     case 3:
                         Interface.exibir_carrinho(carrinho)
                     case 4:
-                        print("\n=== Histórico ===")
+                        Interface.exibir_historico(usuario_login.id)
                     case 5:
                         login = False
                         break
