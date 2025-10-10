@@ -25,7 +25,12 @@ def menu_cliente():
     print("\n === Loja ===")
     print("1. Ver produtos")
     print("2. Adicionar Produto ao carrinho.")
-    print("3. Ver Carrinho")
-    print("4. Finalizar Pedido")
-    print("5. Ver Histórico de Compra")
-    print("6. Sair")
+    print("3. Ver Carrinho/Finalizar Pedido")
+    print("4. Ver Histórico de Compra")
+    print("5. Sair")
+
+def menu_pagamento():
+    print("\n=== Pagamento ===")
+    print("1. Cartão de Crédito")
+    print("2. Boleto")
+    print("3. Pix")

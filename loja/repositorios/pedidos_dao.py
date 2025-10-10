@@ -53,7 +53,7 @@ class PedidosDAO:
                         VALUES (?, ?, ?, ?, ?)
                     """, (carrinho.id, item.produto_id, item.quantidade, item.preco_unitario, item.subtotal))
 
-                cursor.execute("UPDATE pedidos SET total = ? WHERE id = ?", (carrinho.total, carrinho.id))
+                cursor.execute("UPDATE pedidos SET total = ?, status = ? WHERE id = ?", (carrinho.total, carrinho.status, carrinho.id))
            
             conexao.commit()
 

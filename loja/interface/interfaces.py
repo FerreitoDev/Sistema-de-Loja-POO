@@ -5,6 +5,9 @@ from loja import utils
 from loja.produtos import Produto
 from loja.interface import menus
 from loja.pedidos import Pedido
+from loja.pagamentos import CartaoCredito, Boleto, Pix
+
+STATUS_FECHADO = "fechado"
 
 class Interface:
     @staticmethod
@@ -29,7 +32,6 @@ class Interface:
                     return True, usuario_login
             except (Autenticador.ErroLogin, ValueError) as e:
                 print("Erro:", e)
-                continue
 
     @staticmethod
     def cadastrando():
@@ -95,7 +97,7 @@ class Interface:
                 print("Erro:", e)
     
     @staticmethod
-    def atualizando_produco(usuario_login):
+    def atualizando_produto(usuario_login):
         print("\n=== Atualizar Produtos ===")
         while True:
             try:
@@ -163,7 +165,6 @@ class Interface:
 
                 case _:
                     print("Erro: Opção inválida")
-                    continue
 
     @staticmethod
     def adicionando_produto_carrinho(usuario_login, carrinho):
@@ -206,8 +207,58 @@ class Interface:
                     print(f"    {i}. {item}")
 
                 print(f"\nTotal: R${carrinho.total:.2f}")
+
+                Interface.pagando(carrinho)
+
             else:
                 print("\nCarrinho vazio.")
 
+        
+
         except ValueError as e:
             print("Erro:", e)
+
+    @staticmethod
+    def pagando(carrinho):
+        while True:
+            print("\nDeseja finalizar a compra?\n1. Sim \n0. Não")
+            opcao = int(input())
+
+            match opcao:
+                case 0:
+                    return
+                case 1:
+                    pass
+                case _:
+                    raise ValueError("Opção inválida.")
+                
+            menus.menu_pagamento()
+
+            opcao = int(input())
+
+            match opcao:
+                case 1:
+                    CartaoCredito().processar()
+                    carrinho.status = STATUS_FECHADO
+                    PedidosDAO.atualizar_pedido(carrinho)
+                    break
+                case 2:
+                    Boleto().processar()
+                    carrinho.status = STATUS_FECHADO
+                    PedidosDAO.atualizar_pedido(carrinho)
+                    break
+                case 3:
+                    Pix().processar()
+                    carrinho.status = STATUS_FECHADO
+                    PedidosDAO.atualizar_pedido(carrinho)
+                    break
+                case _:
+                    raise ValueError("Opção inválida.")
+            
+            
+
+        
+
+
+
+        

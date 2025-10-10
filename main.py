@@ -46,8 +46,7 @@ def main():
                     case 2:
                         Interface.cadastrando_produto(usuario_login)
                     case 3:
-                        Interface.atualizando_produco(usuario_login)
-                        
+                        Interface.atualizando_produto(usuario_login)
                     case 4:
                         pass
                     case 5:
@@ -76,15 +75,11 @@ def main():
                     case 3:
                         Interface.exibir_carrinho(carrinho)
                     case 4:
-                        pass
-
-                    case 5:
                         print("\n=== Histórico ===")
-
-                    case 6:
+                    case 5:
                         login = False
                         break
-
+                        
                     case _:
                         print("\nErro: Opção inválida.")     
 
