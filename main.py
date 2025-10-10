@@ -48,7 +48,7 @@ def main():
                     case 3:
                         Interface.atualizando_produto(usuario_login)
                     case 4:
-                        pass
+                        Interface.exibir_pedidos()
                     case 5:
                         pass
                     case 6:

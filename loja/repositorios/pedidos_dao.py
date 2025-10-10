@@ -149,6 +149,53 @@ class PedidosDAO:
         return pedidos  
     
     @staticmethod
+    def buscar_pedidos():
+        pedidos = []
+        with DataBase.obter_conexao() as conexao:
+            cursor = conexao.cursor()
+
+            cursor.execute("""
+                SELECT id, cliente_id, total, status, data
+                FROM pedidos
+                WHERE status = 'fechado'
+            """)
+
+            dados_pedidos = cursor.fetchall()
+
+            if not dados_pedidos:
+                return []
+            
+            for dados_pedido in dados_pedidos:
+                pedido = Pedido(
+                    cliente_id = dados_pedido[1], id = dados_pedido[0], total = dados_pedido[2],
+                )
+                pedido.status = dados_pedido[3]
+                pedido.data = dados_pedido[4]
+
+                cursor.execute("""
+                    SELECT id, produto_id, quantidade, preco_unitario, subtotal
+                    FROM pedido_itens
+                    WHERE pedido_id = ?
+                """, (pedido.id,))
+
+                itens = cursor.fetchall()
+
+                for item in itens:
+                    pedido_item = PedidoItem(
+                    produto_id=item[1],
+                        pedido_id=pedido.id,
+                        preco_unitario=item[3],
+                        quantidade=item[2],
+                        id=item[0]
+                    )
+                    pedido_item.subtotal = item[4]
+                    pedido.itens.append(pedido_item)
+
+                pedidos.append(pedido)
+
+        return pedidos  
+    
+    @staticmethod
     def visualizar_pedido(pedido_id):
        
         with DataBase.obter_conexao() as conexao:

@@ -232,6 +232,18 @@ class Interface:
 
                 print(f"\nTotal: R${pedido.total:.2f}")
 
+    def exibir_pedidos():
+        print("\n=== Pedidos ===")
+        pedidos = PedidosDAO.buscar_pedidos()
+        if pedidos:
+            for pedido in pedidos:
+                print(f"Pedido ID: {pedido.id}\nData: {pedido.data}")
+                itens = PedidosDAO.visualizar_pedido(pedido.id)
+                print("Itens:")
+                for i, item in enumerate(itens, start = 1):
+                    print(f"    {i}. {item}")
+
+                print(f"\nTotal: R${pedido.total:.2f}")
 
     @staticmethod
     def pagando(carrinho):
