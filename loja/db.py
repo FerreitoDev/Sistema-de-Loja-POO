@@ -43,7 +43,7 @@ class DataBase:
             """)
 
             cursor.execute("""
-            CREATE TABLE IF NOT EXISTS pedido (
+            CREATE TABLE IF NOT EXISTS pedidos (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 cliente_id INTEGER NOT NULL,
                 total REAL NOT NULL DEFAULT 0.0,
@@ -54,7 +54,7 @@ class DataBase:
             """)
             
             cursor.execute("""
-            CREATE TABLE IF NOT EXISTS pedido_item (
+            CREATE TABLE IF NOT EXISTS pedido_itens (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 pedido_id INTEGER NOT NULL,
                 produto_id INTEGER NOT NULL,

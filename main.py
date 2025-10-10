@@ -2,11 +2,14 @@ from loja.db import DataBase
 from loja.autenticador import Autenticador
 from loja.usuarios import Adm, Cliente
 from loja.repositorios.produtos_dao import ProdutosDAO
+from loja.repositorios.pedidos_dao import PedidosDAO
 from loja import menus
 from loja import utils
 from loja.produtos import Produto
+from loja.pedidos import Pedido, PedidoItem
 
 DataBase.criar_tabelas()
+
 def main():
     login = False
     while True:
@@ -25,12 +28,10 @@ def main():
                             print("Para voltar digite '0' no campo Email.")
                             try:
                                 email = input("Email: ")
-                                print(email)
                                 if email.strip() == "0":
                                     break
                                 Autenticador.validar_email(email)
                                 senha = input("Senha: ")
-                                print(senha)
                                 usuario_login = Autenticador.logar(email, senha)
                                 if usuario_login:
                                     login = True
@@ -60,6 +61,7 @@ def main():
                         exit()
                     case _:
                         print("\nErro: Opção inválida")
+
             break
 
         if login and isinstance(usuario_login, Adm):
@@ -164,12 +166,13 @@ def main():
                     case 6:
                         pass
                     case 7:
-                        pass
-                    case 8:
                         login = False
-                        break       
+                        break 
+                    case _:
+                        print("\nErro: Opção inválida.")         
         if login and isinstance(usuario_login, Cliente):
             while True:
+                carrinho = PedidosDAO.buscar_cliente_pedido_aberto(usuario_login.id)
                 menus.menu_cliente()
                 opcao, sucesso = utils.obter_opcao()
 
@@ -182,15 +185,63 @@ def main():
                         produtos = ProdutosDAO.listar_produtos()
                         for produto in produtos:
                             print(produto)
-                    case 2:         
-                        pass
+
+                    case 2:                               
+                        while True:
+                            print("\n=== Adicionando produto ao carrinho ===")
+                            try:
+                                print("Para voltar digite '0'.")
+                                id_produto = input("Informe o ID do produto: ")
+
+                                if id_produto == '0':
+                                    break
+                                
+                                id_produto = int(id_produto)
+                                if utils.validar_id(id_produto):
+                                    produto_carrinho = ProdutosDAO.pegar_produto(id_produto)
+
+                                if not carrinho:
+                                    pedido = Pedido(usuario_login.id)
+                                    pedido.adicionar_item(produto_carrinho.id, produto_carrinho.preco)
+                                    PedidosDAO.criar_pedido(pedido)
+                                    print("\nProduto adicionado ao carrinho.")
+                                    break
+
+                                carrinho.adicionar_item(produto_carrinho.id, produto_carrinho.preco)
+                                PedidosDAO.atualizar_pedido(carrinho)
+                                print("\nProduto adicionado ao carrinho.")
+                                break
+
+                            except ValueError as e:
+                                print("\nErro:", e)
+
                     case 3:
-                        pass
+                            print("\n=== Carrinho ===")
+                            try:
+                                if carrinho:
+                                    itens = PedidosDAO.visualizar_pedido(carrinho.id)
+                                    print("Itens:")
+                                    for i, item in enumerate(itens, start = 1):
+                                        print(f"    {i}. {item}")
+
+                                    print(f"\nTotal: R${carrinho.total:.2f}")
+                                else:
+                                    print("Carrinho vazio.")
+
+                            except ValueError as e:
+                                print("Erro:", e)
                     case 4:
                         pass
+
                     case 5:
+                        print("\n=== Histórico ===")
+
+                    case 6:
                         login = False
                         break
+                    
+                    case _:
+                        print("\nErro: Opção inválida.")     
 
 
 if __name__ == "__main__":
