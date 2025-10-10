@@ -53,10 +53,7 @@ class Adm(Usuario):
         ProdutosDAO.adicionar_produto(produto)
 
     @staticmethod
-    def alterar_produto(id, nome, preco, quantidade_estoque):
-        ProdutosDAO.atualizar_produto(id, nome, preco, quantidade_estoque)
+    def alterar_produto(produto):
+        ProdutosDAO.atualizar_produto(produto)
 
-    @staticmethod
-    def excluir_produto(id):
-        ProdutosDAO.deletar_produto(id)
 

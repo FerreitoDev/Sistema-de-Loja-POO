@@ -1,12 +1,9 @@
-from loja.db import DataBase
-from loja.autenticador import Autenticador
-from loja.usuarios import Adm, Cliente
-from loja.repositorios.produtos_dao import ProdutosDAO
-from loja.repositorios.pedidos_dao import PedidosDAO
-from loja import menus
 from loja import utils
-from loja.produtos import Produto
-from loja.pedidos import Pedido, PedidoItem
+from loja.db import DataBase
+from loja.interface import menus
+from loja.usuarios import Adm, Cliente
+from loja.interface.interfaces import Interface
+from loja.repositorios.pedidos_dao import PedidosDAO
 
 DataBase.criar_tabelas()
 
@@ -23,40 +20,11 @@ def main():
 
                 match opcao:
                     case 1:
-                        while True:
-                            print("\n=== Login ===")
-                            print("Para voltar digite '0' no campo Email.")
-                            try:
-                                email = input("Email: ")
-                                if email.strip() == "0":
-                                    break
-                                Autenticador.validar_email(email)
-                                senha = input("Senha: ")
-                                usuario_login = Autenticador.logar(email, senha)
-                                if usuario_login:
-                                    login = True
-                                    print("Usuario logado com sucesso.")
-                                    break
-                            except (Autenticador.ErroLogin, ValueError) as e:
-                                print("Erro:", e)
-                                continue
+                        login, usuario_login = Interface.logando()
+                        
                     case 2:
-                        while True:
-                            print("\n=== Cadastro ===")
-                            print("Para voltar digite '0'.")
-                            try:
-                                nome = input("Nome: ")
-                                email = input("Email: ")
-                                senha = input("Senha: ")
-                                if nome.strip() == '0' or email.strip() == '0' or senha.strip() == '0':
-                                    
-                                    break
-                                Autenticador.cadastrar_cliente(nome, email, senha)
-                                print("Cliente cadastrado com sucesso.")
-                                
-                                break
-                            except ValueError as e:
-                                print("Erro:", e)
+                        Interface.cadastrando()
+
                     case 3:
                         exit()
                     case _:
@@ -74,91 +42,12 @@ def main():
 
                 match opcao:
                     case 1:
-                        print("\n=== Produtos ===")
-                        produtos = ProdutosDAO.listar_produtos()
-                        for produto in produtos:
-                            print(produto)
+                        Interface.exibir_produtos_usuario()
                     case 2:
-                        print("\n=== Cadastrar Produto ===")
-                        cadastro_produto = False
-                        try:
-                            nome_produto = input("Nome do Produto: ")
-                            preco_produto = float(input("Valor do Produto: R$"))
-                            quantidade_produto = int(input("Quantidade do Produto: "))
-                            if utils.validar_texto_vazio(nome_produto) and utils.validar_valor(preco_produto) and utils.validar_valor(quantidade_produto):
-                                cadastro_produto = True
-                            if cadastro_produto:
-                                usuario_login.cadastrar_produto(Produto(nome_produto, preco_produto, quantidade_produto))
-                                print("Produto")
-                        except ValueError as e:
-                            print("Erro:", e)
+                        Interface.cadastrando_produto(usuario_login)
                     case 3:
+                        Interface.atualizando_produco(usuario_login)
                         
-                        while True:
-                            print("\n=== Atualizar Produtos ===")
-                            try:
-                                print("Para voltar digite '0'.")
-                                id_produto = input("Informe o ID do produto: ")
-
-                                if id_produto == '0':
-                                    break
-                                
-                                id_produto = int(id_produto)
-                                if utils.validar_id(id_produto):
-                                    produto_atualizar = ProdutosDAO.pegar_produto(id_produto)
-
-                            except ValueError as e:
-                                print("\nErro:", e)
-                                continue
-                            menus.menu_atualizar_produto()
-                            opcao, sucesso = utils.obter_opcao()
-
-                            if not sucesso:
-                                continue
-
-                            match opcao:
-                                case 1:
-                                    novo_nome_produto = input("Digite o novo nome do produto: ")
-
-                                    try:
-                                        if utils.validar_texto_vazio(novo_nome_produto):
-                                            produto_atualizar.nome = novo_nome_produto
-                                            ProdutosDAO.atualizar_produto(produto_atualizar)
-                                            print(f"\nNome do produto atualizado para: {novo_nome_produto}.")
-                                            break
-
-                                    except ValueError as e:
-                                        print("\nErro:", e)
-                                        continue
-                                case 2:
-                                    novo_preco_produto = float(input("Digite o novo preço do produto: R$"))
-
-                                    try:
-                                        if utils.validar_valor(novo_preco_produto):
-                                            produto_atualizar.preco = novo_preco_produto
-                                            ProdutosDAO.atualizar_produto(produto_atualizar)
-                                            print(f"\nPreço do produto atualizado para: R${novo_preco_produto}.")
-                                            break
-
-                                    except ValueError as e:
-                                        print("\nErro:", e)
-                                        continue
-                                case 3:
-                                    nova_quantidade_produto = int(input("Digite a nova quantidade do produto: "))
-                                    
-                                    try:
-                                        if utils.validar_valor(nova_quantidade_produto):
-                                            produto_atualizar.quantidade_estoque = nova_quantidade_produto
-                                            ProdutosDAO.atualizar_produto(produto_atualizar)
-                                            print(f"\nQuantidade atualizada para: {nova_quantidade_produto}.")
-                                            break
-
-                                    except ValueError as e:
-                                        print("\nErro:", e)
-                                        continue
-                                case 4:
-                                    break
-
                     case 4:
                         pass
                     case 5:
@@ -181,55 +70,11 @@ def main():
 
                 match opcao:
                     case 1:
-                        print("\n=== Produtos ===")
-                        produtos = ProdutosDAO.listar_produtos()
-                        for produto in produtos:
-                            print(produto)
-
+                        Interface.exibir_produtos_usuario()
                     case 2:                               
-                        while True:
-                            print("\n=== Adicionando produto ao carrinho ===")
-                            try:
-                                print("Para voltar digite '0'.")
-                                id_produto = input("Informe o ID do produto: ")
-
-                                if id_produto == '0':
-                                    break
-                                
-                                id_produto = int(id_produto)
-                                if utils.validar_id(id_produto):
-                                    produto_carrinho = ProdutosDAO.pegar_produto(id_produto)
-
-                                if not carrinho:
-                                    pedido = Pedido(usuario_login.id)
-                                    pedido.adicionar_item(produto_carrinho.id, produto_carrinho.preco)
-                                    PedidosDAO.criar_pedido(pedido)
-                                    print("\nProduto adicionado ao carrinho.")
-                                    break
-
-                                carrinho.adicionar_item(produto_carrinho.id, produto_carrinho.preco)
-                                PedidosDAO.atualizar_pedido(carrinho)
-                                print("\nProduto adicionado ao carrinho.")
-                                break
-
-                            except ValueError as e:
-                                print("\nErro:", e)
-
+                        Interface.adicionando_produto_carrinho(usuario_login, carrinho)
                     case 3:
-                            print("\n=== Carrinho ===")
-                            try:
-                                if carrinho:
-                                    itens = PedidosDAO.visualizar_pedido(carrinho.id)
-                                    print("Itens:")
-                                    for i, item in enumerate(itens, start = 1):
-                                        print(f"    {i}. {item}")
-
-                                    print(f"\nTotal: R${carrinho.total:.2f}")
-                                else:
-                                    print("Carrinho vazio.")
-
-                            except ValueError as e:
-                                print("Erro:", e)
+                        Interface.exibir_carrinho(carrinho)
                     case 4:
                         pass
 
@@ -239,7 +84,7 @@ def main():
                     case 6:
                         login = False
                         break
-                    
+
                     case _:
                         print("\nErro: Opção inválida.")     
 
@@ -247,13 +92,6 @@ def main():
 if __name__ == "__main__":
     main()
  
-
-
-
-
-
-
-
 # DataBase.criar_tabela_adm()
 # try:
 #     adm = Autenticador.cadastro_adm("Administrador", "administrador@loja.com", "contateste123@")
