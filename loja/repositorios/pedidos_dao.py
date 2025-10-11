@@ -149,6 +149,16 @@ class PedidosDAO:
         return pedidos  
     
     @staticmethod
+    def remover_pedido_item(pedido_id, produto_id):
+        with DataBase.obter_conexao() as conexao:
+            cursor = conexao.cursor()
+
+            cursor.execute("""DELETE FROM pedido_itens WHERE pedido_id = ? AND produto_id = ?;
+                    """,(pedido_id, produto_id))
+
+            conexao.commit()
+    
+    @staticmethod
     def buscar_pedidos():
         pedidos = []
         with DataBase.obter_conexao() as conexao:
@@ -203,7 +213,8 @@ class PedidosDAO:
             
             # Busca os itens do pedido com JOIN para pegar o nome do produto
             cursor.execute("""
-                SELECT 
+                SELECT
+                    p.id, 
                     p.nome, 
                     pi.quantidade, 
                     pi.preco_unitario,
@@ -217,8 +228,8 @@ class PedidosDAO:
             
             # Monta objetos detalhados
             itens_detalhados = [
-                PedidoItemDetalhado(nome, quantidade, preco_unitario, subtotal)
-                for nome, quantidade, preco_unitario, subtotal in resultados
+                PedidoItemDetalhado(id, nome, quantidade, preco_unitario, subtotal)
+                for id, nome, quantidade, preco_unitario, subtotal in resultados
             ]
             
             return itens_detalhados

@@ -198,23 +198,35 @@ class Interface:
 
     @staticmethod
     def exibir_carrinho(carrinho):
-        print("\n=== Carrinho ===")
         try:
-            if carrinho:
-                itens = PedidosDAO.visualizar_pedido(carrinho.id)
+            while True:
+                if carrinho:
+                    itens = PedidosDAO.visualizar_pedido(carrinho.id)
+                else:
+                    print("\nCarrinho vazio.")
+                    return
+                
+                print("\n=== Carrinho ===")
                 print("Itens:")
-                for i, item in enumerate(itens, start = 1):
-                    print(f"    {i}. {item}")
+                for item in itens:
+                    print(item)
 
                 print(f"\nTotal: R${carrinho.total:.2f}")
+                menus.menu_carrinho()
+                opcao, sucesso = utils.obter_opcao()
 
-                Interface.pagando(carrinho)
+                if not sucesso:
+                    continue
 
-            else:
-                print("\nCarrinho vazio.")
-
-        
-
+                match opcao:
+                    case 0:
+                        return
+                    case 1:
+                        Interface.remover_produto_carrinho(carrinho)
+                        continue
+                    case 2:
+                        Interface.pagando(carrinho)
+                        continue
         except ValueError as e:
             print("Erro:", e)
     
@@ -227,8 +239,8 @@ class Interface:
                 print(f"Pedido ID: {pedido.id}\nData: {pedido.data}")
                 itens = PedidosDAO.visualizar_pedido(pedido.id)
                 print("Itens:")
-                for i, item in enumerate(itens, start = 1):
-                    print(f"    {i}. {item}")
+                for item in itens:
+                    print(item)
 
                 print(f"\nTotal: R${pedido.total:.2f}")
 
@@ -240,49 +252,80 @@ class Interface:
                 print(f"Pedido ID: {pedido.id}\nData: {pedido.data}")
                 itens = PedidosDAO.visualizar_pedido(pedido.id)
                 print("Itens:")
-                for i, item in enumerate(itens, start = 1):
-                    print(f"    {i}. {item}")
+                for item in itens:
+                    print(item)
 
                 print(f"\nTotal: R${pedido.total:.2f}")
 
     @staticmethod
     def pagando(carrinho):
+
+        if Interface.exibir_carrinho(carrinho):
+
+            while True:
+                print("\nDeseja finalizar a compra?\n1. Sim \n0. Não")
+                opcao = int(input())
+
+                match opcao:
+                    case 0:
+                        return
+                    case 1:
+                        pass
+                    case _:
+                        raise ValueError("Opção inválida.")
+                    
+                menus.menu_pagamento()
+
+                opcao = int(input())
+
+                match opcao:
+                    case 1:
+                        CartaoCredito().processar()
+                        carrinho.status = STATUS_FECHADO
+                        PedidosDAO.atualizar_pedido(carrinho)
+                        break
+                    case 2:
+                        Boleto().processar()
+                        carrinho.status = STATUS_FECHADO
+                        PedidosDAO.atualizar_pedido(carrinho)
+                        break
+                    case 3:
+                        Pix().processar()
+                        carrinho.status = STATUS_FECHADO
+                        PedidosDAO.atualizar_pedido(carrinho)
+                        break
+                    case _:
+                        raise ValueError("Opção inválida.")
+    
+    def remover_produto_carrinho(carrinho : Pedido):
         while True:
-            print("\nDeseja finalizar a compra?\n1. Sim \n0. Não")
-            opcao = int(input())
+            try:
+                print("\nPara voltar digite '0'.")
+                id_produto = input("Informe o ID do produto: ")
 
-            match opcao:
-                case 0:
+                if id_produto == '0':
+                    break
+
+                id_produto = int(id_produto)
+                if utils.validar_id(id_produto):
+                    for item in carrinho.itens:
+                        if item.produto_id == id_produto:
+                            if item.quantidade > 1:
+                                item.quantidade -= 1
+                                print("\nRemovido 1 tem do carrinho.")
+                                PedidosDAO.atualizar_pedido(carrinho)
+                                return
+                            else:
+                                carrinho.itens.remove(item)
+                                print("\nItem Removido do Carrinho.")
+                                PedidosDAO.remover_pedido_item(carrinho.id, item.produto_id)
+                                return
+                            
+                    print("Produto não encontrado")
                     return
-                case 1:
-                    pass
-                case _:
-                    raise ValueError("Opção inválida.")
                 
-            menus.menu_pagamento()
-
-            opcao = int(input())
-
-            match opcao:
-                case 1:
-                    CartaoCredito().processar()
-                    carrinho.status = STATUS_FECHADO
-                    PedidosDAO.atualizar_pedido(carrinho)
-                    break
-                case 2:
-                    Boleto().processar()
-                    carrinho.status = STATUS_FECHADO
-                    PedidosDAO.atualizar_pedido(carrinho)
-                    break
-                case 3:
-                    Pix().processar()
-                    carrinho.status = STATUS_FECHADO
-                    PedidosDAO.atualizar_pedido(carrinho)
-                    break
-                case _:
-                    raise ValueError("Opção inválida.")
-                
-            
+            except ValueError as e:
+                print("Erro:", e)
             
 
         

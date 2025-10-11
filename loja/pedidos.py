@@ -47,11 +47,12 @@ class PedidoItem:
         return f"Produto ID: {self.produto_id}, Quantidade: {self.quantidade}, Preço Unit: R${self.preco_unitario:.2f}, Subtotal: R$ {self.subtotal:.2f}"
     
 class PedidoItemDetalhado:
-    def __init__(self, produto_nome, quantidade, preco_unitario, subtotal):
+    def __init__(self, produto_id, produto_nome, quantidade, preco_unitario, subtotal):
+        self.produto_id = produto_id
         self.produto_nome = produto_nome
         self.quantidade = quantidade
         self.preco_unitario = preco_unitario
         self.subtotal = subtotal 
 
     def __str__(self):
-        return f"{self.produto_nome}, Qtd: {self.quantidade}, Preço Unit: R${self.preco_unitario:.2f}, Subtotal: R${self.subtotal:.2f}"
+        return f"ID: {self.produto_id}. {self.produto_nome}, Qtd: {self.quantidade}, Preço Unit: R${self.preco_unitario:.2f}, Subtotal: R${self.subtotal:.2f}"
