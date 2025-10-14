@@ -15,7 +15,7 @@ def obter_opcao():
 def validar_valor(valor):
     if not isinstance(valor, Number):
         raise ValueError("Valor tem que ser um número.")
-    if valor <= 0:
+    if valor < 0:
         raise ValueError("Valor tem que ser maior ou igual 0")
     return True
 

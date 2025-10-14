@@ -67,12 +67,12 @@ class Autenticador:
         usuario = UsuarioDAO.procurar_usuarios(email)
 
         if not usuario:
-            raise cls.ErroLogin("Erro: Usuario não encontrado.")
+            raise cls.ErroLogin("Usuario não encontrado.")
         
         if cls.verificar_senha_login(senha, usuario.senha):
                 return usuario
         
-        raise cls.ErroLogin("Erro: Email ou senha incorretos.")
+        raise cls.ErroLogin("Email ou senha incorretos.")
 
     @classmethod
     def cadastrar_cliente(cls, nome, email, senha):

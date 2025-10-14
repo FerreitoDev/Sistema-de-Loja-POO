@@ -1,13 +1,12 @@
 from loja.autenticador import Autenticador
 from loja.repositorios.produtos_dao import ProdutosDAO
 from loja.repositorios.pedidos_dao import PedidosDAO
+from loja.relatorios import Relatorios
 from loja import utils
 from loja.produtos import Produto
 from loja.interface import menus
 from loja.pedidos import Pedido
 from loja.pagamentos import CartaoCredito, Boleto, Pix
-
-STATUS_FECHADO = "fechado"
 
 class Interface:
     @staticmethod
@@ -31,7 +30,7 @@ class Interface:
                     print("\nUsuario logado com sucesso.")
                     return True, usuario_login
             except (Autenticador.ErroLogin, ValueError) as e:
-                print("Erro:", e)
+                print("\nErro:", e)
 
     @staticmethod
     def cadastrando():
@@ -55,7 +54,7 @@ class Interface:
                 
                 break
             except ValueError as e:
-                print("Erro:", e)
+                print("\nErro:", e)
 
     @staticmethod
     def cadastrando_adm():
@@ -79,15 +78,18 @@ class Interface:
                 
                 break
             except ValueError as e:
-                print("Erro:", e)
+                print("\nErro:", e)
 
 
     @staticmethod
     def exibir_produtos_usuario():
         print("\n=== Produtos ===")
-        produtos = ProdutosDAO.listar_produtos()
-        for produto in produtos:
-            print(produto)
+        try: 
+            produtos = ProdutosDAO.listar_produtos()
+            for produto in produtos:
+                print(produto)
+        except ValueError as e:
+            print("\nErro:", e)
 
     @staticmethod
     def cadastrando_produto(usuario_login):
@@ -107,7 +109,7 @@ class Interface:
                         print("\nCadastro Cancelado")
                         return
                     case _:
-                        print("Opção inválida")
+                        print("\nOpção inválida")
                         continue
                     
 
@@ -119,7 +121,7 @@ class Interface:
                     break
                 
             except ValueError as e:
-                print("Erro:", e)
+                print("\nErro:", e)
     
     @staticmethod
     def atualizando_produto(usuario_login):
@@ -189,7 +191,7 @@ class Interface:
                     break
 
                 case _:
-                    print("Erro: Opção inválida")
+                    print("\nErro: Opção inválida")
 
     @staticmethod
     def adicionando_produto_carrinho(usuario_login, carrinho):
@@ -253,7 +255,7 @@ class Interface:
                         Interface.pagando(carrinho)
                         return
         except ValueError as e:
-            print("Erro:", e)
+            print("\nErro:", e)
     
     @staticmethod
     def exibir_historico(usuario_id):
@@ -261,26 +263,31 @@ class Interface:
         pedidos = PedidosDAO.buscar_cliente_pedidos_fechado(usuario_id)
         if pedidos:
             for pedido in pedidos:
-                print(f"Pedido ID: {pedido.id}\nData: {pedido.data}")
+                print(f"\nPedido ID: {pedido.id}\nData: {pedido.data}")
                 itens = PedidosDAO.visualizar_pedido(pedido.id)
                 print("Itens:")
                 for item in itens:
                     print(item)
 
                 print(f"\nTotal: R${pedido.total:.2f}")
-
+        else:
+            print("\nNão há histórico de pedidos.")
+    
+    @staticmethod
     def exibir_pedidos():
         print("\n=== Pedidos ===")
         pedidos = PedidosDAO.buscar_pedidos()
         if pedidos:
             for pedido in pedidos:
-                print(f"Pedido ID: {pedido.id}\nData: {pedido.data}")
+                print(f"Pedido ID: {pedido.id}\nData: {pedido.data} \nCliente ID: {pedido.cliente_id}")
                 itens = PedidosDAO.visualizar_pedido(pedido.id)
                 print("Itens:")
                 for item in itens:
                     print(item)
 
                 print(f"\nTotal: R${pedido.total:.2f}")
+        else:
+            print("\nNenhum pedido registrado.")
 
     @staticmethod
     def pagando(carrinho):
@@ -304,24 +311,25 @@ class Interface:
                 case 1:
                     ProdutosDAO.atualizar_estoque(carrinho)
                     CartaoCredito().processar()
-                    carrinho.status = STATUS_FECHADO
+                    carrinho.finalizar()
                     PedidosDAO.atualizar_pedido(carrinho)
                     break
                 case 2:
                     ProdutosDAO.atualizar_estoque(carrinho)
                     Boleto().processar()
-                    carrinho.status = STATUS_FECHADO
+                    carrinho.finalizar()
                     PedidosDAO.atualizar_pedido(carrinho)
                     break
                 case 3:
                     ProdutosDAO.atualizar_estoque(carrinho)
                     Pix().processar()
-                    carrinho.status = STATUS_FECHADO
+                    carrinho.finalizar()
                     PedidosDAO.atualizar_pedido(carrinho)
                     break
                 case _:
                     raise ValueError("Opção inválida.")
     
+    @staticmethod
     def remover_produto_carrinho(carrinho : Pedido):
         while True:
             try:
@@ -351,8 +359,23 @@ class Interface:
                 
             except ValueError as e:
                 print("Erro:", e)
-            
+    
+    @staticmethod 
+    def gerar_relatorios():
+        try:
+            pedidos = PedidosDAO.buscar_pedidos()
+            produtos = ProdutosDAO.listar_produtos()
 
+
+            # cria o dicionário de produtos
+            produtos_dict = {p.id: p for p in produtos}
+           
+            Relatorios.gerar_relatorio_pedidos(pedidos, produtos_dict)
+            Relatorios.gerar_relatorio_itens(pedidos, produtos_dict)
+            Relatorios.gerar_relatorio_estoque(produtos)
+            print("\nRelatórios Gerados com sucesso")
+        except Exception as e:
+            print("Erro:", e)
         
 
 

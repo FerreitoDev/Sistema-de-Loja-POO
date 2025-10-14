@@ -1,6 +1,6 @@
 from datetime import datetime
 
-DATA = datetime.now().strftime("%Y%m%d_%H%M%S")
+STATUS_FECHADO = "fechado"
 
 class Pedido:
     def __init__(self, cliente_id, id = None, total = 0.0):
@@ -9,7 +9,7 @@ class Pedido:
         self.itens= []
         self.total = total
         self.status = "aberto"
-        self.data = DATA
+        self.data = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     def adicionar_item(self, produto_id, preco_unitario):
         for item in self.itens:
@@ -30,6 +30,10 @@ class Pedido:
         for item in self.itens:
             pedido += "  - "  + str(item) + "\n"
         return pedido
+    
+    def finalizar(self):
+        self.status = STATUS_FECHADO
+        self.data = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
 class PedidoItem:
     def __init__(self, produto_id, pedido_id, preco_unitario = 0.0, quantidade = 1, id = None):

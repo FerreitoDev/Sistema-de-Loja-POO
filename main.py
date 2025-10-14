@@ -50,7 +50,7 @@ def main():
                     case 4:
                         Interface.exibir_pedidos()
                     case 5:
-                        pass
+                        Interface.gerar_relatorios()
                     case 6:
                         Interface.cadastrando_adm()
                     case 7:
@@ -87,7 +87,6 @@ def main():
 if __name__ == "__main__":
     main()
  
-# DataBase.criar_tabela_adm()
 # try:
 #     adm = Autenticador.cadastrar_adm("Administrador", "administrador@loja.com", "contateste123@")
 #     UsuarioDAO.adicionar_adm(adm)
