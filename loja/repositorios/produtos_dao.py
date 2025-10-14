@@ -66,6 +66,7 @@ class ProdutosDAO:
                 raise ValueError("Produto não encontrado")
             conexao.commit()
 
+    @staticmethod
     def pegar_produto(id):
         with DataBase.obter_conexao() as conexao:
             cursor = conexao.cursor()
@@ -79,5 +80,25 @@ class ProdutosDAO:
             produto = Produto(nome = produto_db[0], preco = produto_db[1], quantidade_estoque = produto_db[2], id = produto_db[3])
 
             return produto
+        
+    @staticmethod
+    def atualizar_estoque(carrinho):
+        with DataBase.obter_conexao() as conexao:
+            cursor = conexao.cursor()
+
+            for item in carrinho.itens:
+
+                cursor.execute("SELECT quantidade_estoque FROM produtos WHERE id = ?",(item.produto_id,))
+                quantidade_estoque = cursor.fetchone()
+                quantidade_estoque = quantidade_estoque[0] 
+
+                if quantidade_estoque < item.quantidade:
+                    raise ValueError("Sem quantidade em estoque disponivel")
+                
+                else:
+                    cursor.execute("UPDATE produtos SET quantidade_estoque = quantidade_estoque - ? WHERE id = ?",(item.quantidade, item.produto_id))
+        
+        conexao.commit()
+
             
 

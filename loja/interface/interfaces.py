@@ -99,7 +99,7 @@ class Interface:
                 preco_produto = float(input("Valor do Produto: R$"))
                 quantidade_produto = int(input("Quantidade do Produto: "))
 
-                opcao = int(input("Confirmar cadastro:\n1. Sim\n0. Não\n"))
+                opcao = int(input("\nConfirmar cadastro:\n1. Sim\n0. Não\n"))
                 match opcao:
                     case 1:
                         pass
@@ -251,7 +251,7 @@ class Interface:
                         continue
                     case 2:
                         Interface.pagando(carrinho)
-                        continue
+                        return
         except ValueError as e:
             print("Erro:", e)
     
@@ -284,43 +284,43 @@ class Interface:
 
     @staticmethod
     def pagando(carrinho):
+        while True:
+            print("\nDeseja finalizar a compra?\n1. Sim \n0. Não")
+            opcao = int(input())
 
-        if Interface.exibir_carrinho(carrinho):
+            match opcao:
+                case 0:
+                    return
+                case 1:
+                    pass
+                case _:
+                    raise ValueError("Opção inválida.")
+                
+            menus.menu_pagamento()
 
-            while True:
-                print("\nDeseja finalizar a compra?\n1. Sim \n0. Não")
-                opcao = int(input())
+            opcao = int(input())
 
-                match opcao:
-                    case 0:
-                        return
-                    case 1:
-                        pass
-                    case _:
-                        raise ValueError("Opção inválida.")
-                    
-                menus.menu_pagamento()
-
-                opcao = int(input())
-
-                match opcao:
-                    case 1:
-                        CartaoCredito().processar()
-                        carrinho.status = STATUS_FECHADO
-                        PedidosDAO.atualizar_pedido(carrinho)
-                        break
-                    case 2:
-                        Boleto().processar()
-                        carrinho.status = STATUS_FECHADO
-                        PedidosDAO.atualizar_pedido(carrinho)
-                        break
-                    case 3:
-                        Pix().processar()
-                        carrinho.status = STATUS_FECHADO
-                        PedidosDAO.atualizar_pedido(carrinho)
-                        break
-                    case _:
-                        raise ValueError("Opção inválida.")
+            match opcao:
+                case 1:
+                    ProdutosDAO.atualizar_estoque(carrinho)
+                    CartaoCredito().processar()
+                    carrinho.status = STATUS_FECHADO
+                    PedidosDAO.atualizar_pedido(carrinho)
+                    break
+                case 2:
+                    ProdutosDAO.atualizar_estoque(carrinho)
+                    Boleto().processar()
+                    carrinho.status = STATUS_FECHADO
+                    PedidosDAO.atualizar_pedido(carrinho)
+                    break
+                case 3:
+                    ProdutosDAO.atualizar_estoque(carrinho)
+                    Pix().processar()
+                    carrinho.status = STATUS_FECHADO
+                    PedidosDAO.atualizar_pedido(carrinho)
+                    break
+                case _:
+                    raise ValueError("Opção inválida.")
     
     def remover_produto_carrinho(carrinho : Pedido):
         while True:
