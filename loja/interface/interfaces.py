@@ -28,7 +28,7 @@ class Interface:
                 Autenticador.validar_email(email)
                 usuario_login = Autenticador.logar(email, senha)
                 if usuario_login:
-                    print("Usuario logado com sucesso.")
+                    print("\nUsuario logado com sucesso.")
                     return True, usuario_login
             except (Autenticador.ErroLogin, ValueError) as e:
                 print("Erro:", e)
@@ -56,6 +56,31 @@ class Interface:
                 break
             except ValueError as e:
                 print("Erro:", e)
+
+    @staticmethod
+    def cadastrando_adm():
+         while True:
+            print("\n=== Cadastro ===")
+            print("Para voltar digite '0'.")
+            try:
+                nome = input("Nome: ")
+                if nome.strip() == '0':
+                    return
+                
+                email = input("Email: ")
+                if email.strip() == '0':
+                    return
+                
+                senha = input("Senha: ")
+                if senha.strip() == '0':
+                   return
+                Autenticador.cadastrar_adm(nome, email, senha)
+                print("\nAdministrador cadastrado com sucesso.")
+                
+                break
+            except ValueError as e:
+                print("Erro:", e)
+
 
     @staticmethod
     def exibir_produtos_usuario():

@@ -52,7 +52,7 @@ def main():
                     case 5:
                         pass
                     case 6:
-                        pass
+                        Interface.cadastrando_adm()
                     case 7:
                         login = False
                         break 
@@ -89,7 +89,7 @@ if __name__ == "__main__":
  
 # DataBase.criar_tabela_adm()
 # try:
-#     adm = Autenticador.cadastro_adm("Administrador", "administrador@loja.com", "contateste123@")
+#     adm = Autenticador.cadastrar_adm("Administrador", "administrador@loja.com", "contateste123@")
 #     UsuarioDAO.adicionar_adm(adm)
 # except ValueError as e:
 #     print(e)

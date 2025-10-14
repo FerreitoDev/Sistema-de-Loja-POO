@@ -54,12 +54,13 @@ class Autenticador:
             raise ValueError ("Senha deve conter letras e números")
 
     @classmethod
-    def cadastro_adm(cls, nome, email, senha):
+    def cadastrar_adm(cls, nome, email, senha):
         cls.validar_nome(nome)
         cls.validar_email(email)
         cls.validar_senha(senha)
         senha_hash = cls.hashear_senha(senha)
-        return Adm(nome, email, senha_hash)
+        adm = Adm(nome, email, senha_hash)
+        UsuarioDAO.adicionar_adm(adm)
     
     @classmethod
     def logar(cls, email, senha):
