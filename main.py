@@ -7,6 +7,13 @@ from loja.repositorios.pedidos_dao import PedidosDAO
 
 DataBase.criar_tabelas()
 
+#Criar conta adm
+# try:
+#     adm = Autenticador.cadastrar_adm("Administrador", "administrador@loja.com", "contateste123@")
+#     UsuarioDAO.adicionar_adm(adm)
+# except ValueError as e:
+#     print(e)
+
 def main():
     login = False
     while True:
@@ -87,8 +94,3 @@ def main():
 if __name__ == "__main__":
     main()
  
-# try:
-#     adm = Autenticador.cadastrar_adm("Administrador", "administrador@loja.com", "contateste123@")
-#     UsuarioDAO.adicionar_adm(adm)
-# except ValueError as e:
-#     print(e)

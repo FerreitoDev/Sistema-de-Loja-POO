@@ -1,11 +1,11 @@
-from loja.autenticador import Autenticador
-from loja.repositorios.produtos_dao import ProdutosDAO
-from loja.repositorios.pedidos_dao import PedidosDAO
-from loja.relatorios import Relatorios
 from loja import utils
-from loja.produtos import Produto
-from loja.interface import menus
 from loja.pedidos import Pedido
+from loja.interface import menus
+from loja.produtos import Produto
+from loja.relatorios import Relatorios
+from loja.autenticador import Autenticador
+from loja.repositorios.pedidos_dao import PedidosDAO
+from loja.repositorios.produtos_dao import ProdutosDAO
 from loja.pagamentos import CartaoCredito, Boleto, Pix
 
 class Interface:
@@ -29,7 +29,7 @@ class Interface:
                 if usuario_login:
                     print("\nUsuario logado com sucesso.")
                     return True, usuario_login
-            except (Autenticador.ErroLogin, ValueError) as e:
+            except Exception as e:
                 print("\nErro:", e)
 
     @staticmethod
@@ -53,7 +53,7 @@ class Interface:
                 print("\nCliente cadastrado com sucesso.")
                 
                 break
-            except ValueError as e:
+            except Exception as e:
                 print("\nErro:", e)
 
     @staticmethod
@@ -77,7 +77,7 @@ class Interface:
                 print("\nAdministrador cadastrado com sucesso.")
                 
                 break
-            except ValueError as e:
+            except Exception as e:
                 print("\nErro:", e)
 
 
@@ -88,7 +88,7 @@ class Interface:
             produtos = ProdutosDAO.listar_produtos()
             for produto in produtos:
                 print(produto)
-        except ValueError as e:
+        except Exception as e:
             print("\nErro:", e)
 
     @staticmethod
@@ -101,7 +101,13 @@ class Interface:
                 preco_produto = float(input("Valor do Produto: R$"))
                 quantidade_produto = int(input("Quantidade do Produto: "))
 
-                opcao = int(input("\nConfirmar cadastro:\n1. Sim\n0. Não\n"))
+                print("\nConfirmar cadastro:\n1. Sim\n0. Não\n")
+
+                opcao, sucesso = utils.obter_opcao()
+
+                if not sucesso:
+                    continue
+
                 match opcao:
                     case 1:
                         pass
@@ -120,7 +126,7 @@ class Interface:
                     print("Produto cadastrado com sucesse.")
                     break
                 
-            except ValueError as e:
+            except Exception as e:
                 print("\nErro:", e)
     
     @staticmethod
@@ -138,7 +144,7 @@ class Interface:
                 if utils.validar_id(id_produto):
                     produto_atualizar = ProdutosDAO.pegar_produto(id_produto)
 
-            except ValueError as e:
+            except Exception as e:
                 print("\nErro:", e)
                 continue
             menus.menu_atualizar_produto()
@@ -158,7 +164,7 @@ class Interface:
                             print(f"\nNome do produto atualizado para: {novo_nome_produto}.")
                             break
 
-                    except ValueError as e:
+                    except Exception as e:
                         print("\nErro:", e)
                         continue
                 case 2:
@@ -171,7 +177,7 @@ class Interface:
                             print(f"\nPreço do produto atualizado para: R${novo_preco_produto}.")
                             break
 
-                    except ValueError as e:
+                    except Exception as e:
                         print("\nErro:", e)
                         continue
                 case 3:
@@ -184,7 +190,7 @@ class Interface:
                             print(f"\nQuantidade atualizada para: {nova_quantidade_produto}.")
                             break
 
-                    except ValueError as e:
+                    except Exception as e:
                         print("\nErro:", e)
                         continue
                 case 4:
@@ -220,7 +226,7 @@ class Interface:
                 print("\nProduto adicionado ao carrinho.")
                 break
 
-            except ValueError as e:
+            except Exception as e:
                 print("\nErro:", e)
 
     @staticmethod
@@ -254,7 +260,7 @@ class Interface:
                     case 2:
                         Interface.pagando(carrinho)
                         return
-        except ValueError as e:
+        except Exception as e:
             print("\nErro:", e)
     
     @staticmethod
@@ -293,7 +299,11 @@ class Interface:
     def pagando(carrinho):
         while True:
             print("\nDeseja finalizar a compra?\n1. Sim \n0. Não")
-            opcao = int(input())
+
+            opcao, sucesso = utils.obter_opcao()
+
+            if not sucesso:
+                continue
 
             match opcao:
                 case 0:
@@ -305,7 +315,10 @@ class Interface:
                 
             menus.menu_pagamento()
 
-            opcao = int(input())
+            opcao, sucesso = utils.obter_opcao()
+
+            if not sucesso:
+                continue
 
             match opcao:
                 case 1:
@@ -357,7 +370,7 @@ class Interface:
                     print("Produto não encontrado")
                     return
                 
-            except ValueError as e:
+            except Exception as e:
                 print("Erro:", e)
     
     @staticmethod 

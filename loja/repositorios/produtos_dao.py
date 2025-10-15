@@ -98,7 +98,7 @@ class ProdutosDAO:
                 else:
                     cursor.execute("UPDATE produtos SET quantidade_estoque = quantidade_estoque - ? WHERE id = ?",(item.quantidade, item.produto_id))
         
-        conexao.commit()
+            conexao.commit()
 
             
 
